@@ -1,9 +1,23 @@
 from db import DB
 from xcel import XCel
-db = DB()
-xcel = XCel()
+import config
+# Load config
+config = config.loadConfig()
+# Initialize database
+db = DB(config)
 
-db.connectPostgres()
-datas = db.getMegabankData()
+# Connect to dbs
+# db.connectPostgres()
+db.connectOracleCRM()
 
-xcel.writeMegabank(datas, 3, 1)
+# Process Megabank data
+megabankDatas = db.getOracleMegabankData()
+topupDatas = db.getOracleTopupData()
+# Init Xcel
+xcel = XCel(config)
+# Write Megabank to Xcel
+# datas = [('02/21/2019', 'Megabank', 'OTHERS', 394, 419923570, 'MB')]
+xcel.appendMegabank(megabankDatas)
+xcel.appendTopup(topupDatas)
+# save workbook
+xcel.save()
