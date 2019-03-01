@@ -1,25 +1,34 @@
 from openpyxl import Workbook, load_workbook
+from halo import Halo
 import time
 class XCel:
     def __init__(self, config):
         p1 = time.time()
         self.config = config
-        print("Opening template file: {0}".format(self.config['SALE_REPORT_TEMPLATE']))
+        spin = Halo(text="Opening template file: {0}".format(self.config['SALE_REPORT_TEMPLATE']), spinner='dots')
+        spin.start()
         self.wb = load_workbook(self.config['SALE_REPORT_TEMPLATE'], keep_vba=True)
         self.ws = self.wb[self.config['SHEET_DATA_RAW']]
         p2 = time.time()
+        spin.stop()
         print("[{0}] Excel file opened!".format(p2-p1))
     
     def __del__(self):
         self.wb.close()
     
     def save(self, filename="./.data/new.xls"):
+        p1 = time.time()
+        spin = Halo(text="Begin saving file to: {0}".format(filename), spinner = 'dots')
+        spin.start()
         self.wb.save(filename=filename)
+        p2 = time.time()
+        spin.stop()
+        print("[{0}] Excel file saved!".format(p2-p1))
     
     def detectBlank(self, col=1):
         i = 1
         while 1:
-            if self.ws.cell(column=1, row=i).value is None:
+            if self.ws.cell(column=col, row=i).value is None:
                 return i
                 break
             else:
@@ -48,8 +57,21 @@ class XCel:
     def appendTopup(self, datas):
         print("Begin append data for Topup")
         return self.appendNext(datas, col=16)
+    
+    def appendSQLTopup(self, datas):
+        print("Begin append data for SQL Topup")
+        return self.appendNext(datas, col=16)
+    
+    def appendSAT(self, datas):
+        print("Begin append data for SAT")
+        return self.appendNext(datas, col=24)
+    
+    def appendMC(self, datas):
+        print("Begin append data for SAT")
+        return self.appendNext(datas, col=51)
 
 # Write something
 # ws.cell(column=2, row=3, value="ahihi")
-
+if __name__ == "__main__":
+    pass
 

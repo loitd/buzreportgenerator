@@ -6,8 +6,7 @@ verify_ssl = true
 [dev-packages]
 
 [packages]
-cx-oracle = "==6.1"
-openpyxl = "*"
+pyodbc = "*"
 
 [requires]
 python_version = "3.4"
