@@ -20,6 +20,7 @@ class DB:
         self.connRPT = None
         self.curRPT = None
     
+    # Now connect to all kind of used database
     def connectSQLTopup(self):
         print("Begin database SQLServer connection")
         self.connSQL = pyodbc.connect(self.config['TNS_SQLSRV_TOPUP'])
@@ -54,7 +55,7 @@ class DB:
         self.curRPT = self.connRPT.cursor()
         print("Connected to Oracle SAT successfully!")
 
-    
+    # After connecting to databases, now get data for each service
     def getPostgresMegabankData(self):
         print("Begin get Megabank's data")
         try:
@@ -73,11 +74,25 @@ class DB:
         print("Get Oracle Megabank data successfully!")
         return rows
     
+    def getOracleMegabankDataV2(self, fromdate, todate):
+        print("Begin get Oracle Megabank data from {0} to {1}".format(fromdate, todate))
+        self.curCRM.execute(self.config['ORACLE_MEGABANK_SQL_V2'].format(fromdate, todate))
+        rows = self.curCRM.fetchall()
+        print("Get Oracle Megabank data successfully with len={0}".format(len(rows)))
+        return rows
+    
     def getOracleTopupData(self):
         print("Begin get Oracle Topup data")
         self.curCRM.execute(self.config['ORACLE_TOPUP_SQL'])
         rows = self.curCRM.fetchall()
         print("Get Oracle Topup data successfully!")
+        return rows
+    
+    def getOracleTopupDataV2(self, fromdate, todate):
+        print("Begin get Oracle Topup data from {0} to {1}".format(fromdate, todate))
+        self.curCRM.execute(self.config['ORACLE_TOPUP_SQL_V2'].format(fromdate, todate))
+        rows = self.curCRM.fetchall()
+        print("Get Oracle Topup data successfully with len={0}".format(len(rows)))
         return rows
     
     def getSQLTopupData(self):
@@ -94,11 +109,86 @@ class DB:
         print("Get Oracle SAT data successfully!")
         return rows
     
+    def getOracleSATDataV2(self,fromdate,todate):
+        print("Begin get Oracle SAT data from {0} to {1}".format(fromdate, todate))
+        self.curSAT.execute(self.config['ORACLE_SAT_SQL_V2'].format(fromdate, todate))
+        rows = self.curSAT.fetchall()
+        print("Get Oracle SAT data successfully with len={0}".format(len(rows)))
+        return rows
+    
     def getOracleMCData(self):
         print("Begin get Oracle MC data")
         self.curRPT.execute(self.config['ORACLE_MC_SQL'])
         rows = self.curRPT.fetchall()
         print("Get Oracle MC data successfully!")
+        return rows
+    
+    # V2 Added fromdate and todate
+    def getOracleMCDataV2(self, fromdate, todate):
+        print("Begin get Oracle MC data from {0} to {1}".format(fromdate, todate))
+        self.curRPT.execute(self.config['ORACLE_MC_SQL_V2'].format(fromdate, todate))
+        rows = self.curRPT.fetchall()
+        print("Get Oracle MC data successfully with len={0}".format(len(rows)))
+        return rows
+    
+    def getOracleMDData(self):
+        print("Begin get Oracle MD data")
+        self.curRPT.execute(self.config['ORACLE_MD_SQL'])
+        rows = self.curRPT.fetchall()
+        print("Get Oracle MD data successfully!")
+        return rows
+    
+    # V2 Added fromdate and todate
+    def getOracleMDDataV2(self, fromdate, todate):
+        print("Begin get Oracle MD data from {0} to {1}".format(fromdate, todate))
+        self.curRPT.execute(self.config['ORACLE_MD_SQL_V2'].format(fromdate, todate))
+        rows = self.curRPT.fetchall()
+        print("Get Oracle MD data successfully with len={0}".format(len(rows)))
+        return rows
+    
+    def getOracleFDData(self):
+        print("Begin get Oracle FD data")
+        self.curRPT.execute(self.config['ORACLE_FD_SQL'])
+        rows = self.curRPT.fetchall()
+        print("Get Oracle FD data successfully!")
+        return rows
+    
+    # V2 Added fromdate and todate   
+    def getOracleFDDataV2(self, fromdate, todate):
+        print("Begin get Oracle FD data from {0} to {1}".format(fromdate, todate))
+        self.curRPT.execute(self.config['ORACLE_FD_SQL_V2'].format(fromdate, todate))
+        rows = self.curRPT.fetchall()
+        print("Get Oracle FD data successfully with len={0}".format(len(rows)))
+        return rows
+    
+    def getOracleVERIFYData(self):
+        print("Begin get Oracle VERIFY data")
+        self.curRPT.execute(self.config['ORACLE_VERIFY_SQL'])
+        rows = self.curRPT.fetchall()
+        print("Get Oracle VERIFY data successfully!")
+        return rows
+    
+    # V2 Added fromdate and todate   
+    def getOracleVERIFYDataV2(self, fromdate, todate):
+        print("Begin get Oracle VERIFY data from {0} to {1}".format(fromdate, todate))
+        self.curRPT.execute(self.config['ORACLE_VERIFY_SQL_V2'].format(fromdate, todate))
+        rows = self.curRPT.fetchall()
+        print("Get Oracle VERIFY data successfully with len={0}".format(len(rows)))
+        return rows
+    
+    def getOracleTHSData(self):
+        print("Begin get Oracle THS data")
+        self.curRPT.execute(self.config['ORACLE_THS_SQL'])
+        rows = self.curRPT.fetchall()
+        print("Get Oracle THS data successfully!")
+        return rows
+    
+    # V2 Added fromdate and todate   
+    def getOracleTHSDataV2(self, fromdate, todate):
+        print("Begin get Oracle THS data from {0} to {1}".format(fromdate, todate))
+        self.curRPT.execute(self.config['ORACLE_THS_SQL_V2'].format(fromdate, todate, fromdate, todate))
+        rows = self.curRPT.fetchall()
+        print("Get Oracle THS data successfully with len={0}".format(len(rows)))
         return rows
 
     def __del__(self):

@@ -34,11 +34,14 @@ class XCel:
             else:
                 i = i + 1
 
+    # Begin appending datas into first blank cell of the col
     def appendNext(self, datas, col):
         p1 = time.time()
         print("Begin appendNext with firstCol={0}".format(col))
+        # First, detect for first bank row
         row = self.detectBlank(col=col)
         oriCol = col
+        # Now writting 
         for data in datas:
             print("Writing: {0} at row/col: {1}/{2}".format(data, row, col))
             for dat in data:
@@ -67,8 +70,24 @@ class XCel:
         return self.appendNext(datas, col=24)
     
     def appendMC(self, datas):
-        print("Begin append data for SAT")
+        print("Begin append data for MC")
         return self.appendNext(datas, col=51)
+    
+    def appendMD(self, datas):
+        print("Begin append data for MD")
+        return self.appendNext(datas, col=67)
+    
+    def appendFD(self, datas):
+        print("Begin append data for FD")
+        return self.appendNext(datas, col=75)
+    
+    def appendVERIFY(self, datas):
+        print("Begin append data for VERIFY")
+        return self.appendNext(datas, col=82)
+    
+    def appendTHS(self, datas):
+        print("Begin append data for THS")
+        return self.appendNext(datas, col=88)
 
 # Write something
 # ws.cell(column=2, row=3, value="ahihi")
