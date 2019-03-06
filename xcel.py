@@ -1,6 +1,7 @@
 from openpyxl import Workbook, load_workbook
 from halo import Halo
 import time
+from datetime import date, timedelta
 class XCel:
     def __init__(self, config):
         p1 = time.time()
@@ -9,6 +10,7 @@ class XCel:
         spin.start()
         self.wb = load_workbook(self.config['SALE_REPORT_TEMPLATE'], keep_vba=True)
         self.ws = self.wb[self.config['SHEET_DATA_RAW']]
+        self.ws2 = self.wb[self.config['SHEET_MERCHANT']]
         p2 = time.time()
         spin.stop()
         print("[{0}] Excel file opened!".format(p2-p1))
@@ -16,36 +18,49 @@ class XCel:
     def __del__(self):
         self.wb.close()
     
-    def save(self, filename="./.data/new.xls"):
+    def save(self, filename="./.data/Summary-sale-report-{0}.xls"):
         p1 = time.time()
         spin = Halo(text="Begin saving file to: {0}".format(filename), spinner = 'dots')
         spin.start()
-        self.wb.save(filename=filename)
+        # For more date format:https://docs.python.org/2/library/datetime.html#strftime-and-strptime-behavior
+        yesterday = date.today() - timedelta(1)
+        self.wb.save(filename=filename.format(yesterday.strftime("%Y%m%d")))
         p2 = time.time()
         spin.stop()
         print("[{0}] Excel file saved!".format(p2-p1))
     
-    def detectBlank(self, col=1):
+    def detectBlank(self, col=1, ws=1):
         i = 1
+        if ws == 1:
+            wsx = self.ws
+        elif ws == 2:
+            wsx = self.ws2
+
         while 1:
-            if self.ws.cell(column=col, row=i).value is None:
+            if wsx.cell(column=col, row=i).value is None:
                 return i
                 break
             else:
                 i = i + 1
 
     # Begin appending datas into first blank cell of the col
-    def appendNext(self, datas, col):
+    # By default, append to ws1 = Data raw
+    def appendNext(self, datas, col, ws=1):
         p1 = time.time()
         print("Begin appendNext with firstCol={0}".format(col))
         # First, detect for first bank row
-        row = self.detectBlank(col=col)
+        row = self.detectBlank(ws=ws, col=col)
         oriCol = col
+        # check ws
+        if ws == 1:
+            wsx = self.ws
+        elif ws == 2:
+            wsx = self.ws2
         # Now writting 
         for data in datas:
             print("Writing: {0} at row/col: {1}/{2}".format(data, row, col))
             for dat in data:
-                self.ws.cell(column=col, row=row, value=dat)
+                wsx.cell(column=col, row=row, value=dat)
                 col = col + 1
             row = row + 1
             col = oriCol
@@ -73,6 +88,10 @@ class XCel:
         print("Begin append data for MC")
         return self.appendNext(datas, col=51)
     
+    def appendVA(self, datas):
+        print("Begin append data for VA")
+        return self.appendNext(datas, col=59)
+    
     def appendMD(self, datas):
         print("Begin append data for MD")
         return self.appendNext(datas, col=67)
@@ -88,6 +107,10 @@ class XCel:
     def appendTHS(self, datas):
         print("Begin append data for THS")
         return self.appendNext(datas, col=88)
+    
+    def appendNewMerchant(self, datas):
+        print("Begin append data for New Merchant")
+        return self.appendNext(datas, col=1, ws=2)
 
 # Write something
 # ws.cell(column=2, row=3, value="ahihi")

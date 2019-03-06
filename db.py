@@ -81,6 +81,13 @@ class DB:
         print("Get Oracle Megabank data successfully with len={0}".format(len(rows)))
         return rows
     
+    def getOracleMegabankDataV3(self, fromdate, todate):
+        print("Begin get Oracle Megabank data from {0} to {1}".format(fromdate, todate))
+        self.curRPT.execute(self.config['ORACLE_MEGABANK_SQL_V3'].format(fromdate, todate))
+        rows = self.curRPT.fetchall()
+        print("Get Oracle Megabank data successfully with len={0}".format(len(rows)))
+        return rows
+    
     def getOracleTopupData(self):
         print("Begin get Oracle Topup data")
         self.curCRM.execute(self.config['ORACLE_TOPUP_SQL'])
@@ -88,9 +95,10 @@ class DB:
         print("Get Oracle Topup data successfully!")
         return rows
     
+    # Updated tov3
     def getOracleTopupDataV2(self, fromdate, todate):
         print("Begin get Oracle Topup data from {0} to {1}".format(fromdate, todate))
-        self.curCRM.execute(self.config['ORACLE_TOPUP_SQL_V2'].format(fromdate, todate))
+        self.curCRM.execute(self.config['ORACLE_TOPUP_SQL_V3'].format(fromdate, todate))
         rows = self.curCRM.fetchall()
         print("Get Oracle Topup data successfully with len={0}".format(len(rows)))
         return rows
@@ -99,7 +107,14 @@ class DB:
         print("Begin get SQL Topup data")
         self.curSQL.execute(self.config['SQL_TOPUP_SQL'])
         rows = self.curSQL.fetchall()
-        print("Get Oracle Topup data successfully!")
+        print("Get SQL Topup data successfully!")
+        return rows
+    # More about convert to date: https://www.mssqltips.com/sqlservertip/1145/date-and-time-conversions-using-sql-server/
+    def getSQLTopupDataV2(self, fromdate, todate):
+        print("Begin get SQL Topup data from {0} to {1}".format(fromdate, todate))
+        self.curSQL.execute(self.config['SQL_TOPUP_SQL_V2'].format(fromdate, todate))
+        rows = self.curSQL.fetchall()
+        print("Get SQL Topup data successfully!")
         return rows
     
     def getOracleSATData(self):
@@ -109,9 +124,10 @@ class DB:
         print("Get Oracle SAT data successfully!")
         return rows
     
+    # Updated tov3
     def getOracleSATDataV2(self,fromdate,todate):
         print("Begin get Oracle SAT data from {0} to {1}".format(fromdate, todate))
-        self.curSAT.execute(self.config['ORACLE_SAT_SQL_V2'].format(fromdate, todate))
+        self.curSAT.execute(self.config['ORACLE_SAT_SQL_V3'].format(fromdate, todate))
         rows = self.curSAT.fetchall()
         print("Get Oracle SAT data successfully with len={0}".format(len(rows)))
         return rows
@@ -124,9 +140,10 @@ class DB:
         return rows
     
     # V2 Added fromdate and todate
+    # MOVED TOV3
     def getOracleMCDataV2(self, fromdate, todate):
         print("Begin get Oracle MC data from {0} to {1}".format(fromdate, todate))
-        self.curRPT.execute(self.config['ORACLE_MC_SQL_V2'].format(fromdate, todate))
+        self.curRPT.execute(self.config['ORACLE_MC_SQL_V3'].format(fromdate, todate))
         rows = self.curRPT.fetchall()
         print("Get Oracle MC data successfully with len={0}".format(len(rows)))
         return rows
@@ -139,9 +156,10 @@ class DB:
         return rows
     
     # V2 Added fromdate and todate
+    # mOVED TO V3
     def getOracleMDDataV2(self, fromdate, todate):
         print("Begin get Oracle MD data from {0} to {1}".format(fromdate, todate))
-        self.curRPT.execute(self.config['ORACLE_MD_SQL_V2'].format(fromdate, todate))
+        self.curRPT.execute(self.config['ORACLE_MD_SQL_V3'].format(fromdate, todate))
         rows = self.curRPT.fetchall()
         print("Get Oracle MD data successfully with len={0}".format(len(rows)))
         return rows
@@ -154,9 +172,10 @@ class DB:
         return rows
     
     # V2 Added fromdate and todate   
+    # aDDEDV3
     def getOracleFDDataV2(self, fromdate, todate):
         print("Begin get Oracle FD data from {0} to {1}".format(fromdate, todate))
-        self.curRPT.execute(self.config['ORACLE_FD_SQL_V2'].format(fromdate, todate))
+        self.curRPT.execute(self.config['ORACLE_FD_SQL_V3'].format(fromdate, todate))
         rows = self.curRPT.fetchall()
         print("Get Oracle FD data successfully with len={0}".format(len(rows)))
         return rows
@@ -189,6 +208,22 @@ class DB:
         self.curRPT.execute(self.config['ORACLE_THS_SQL_V2'].format(fromdate, todate, fromdate, todate))
         rows = self.curRPT.fetchall()
         print("Get Oracle THS data successfully with len={0}".format(len(rows)))
+        return rows
+    
+    # V2 Added fromdate and todate   
+    def getOracleVADataV2(self, fromdate, todate):
+        print("Begin get Oracle VA data from {0} to {1}".format(fromdate, todate))
+        self.curRPT.execute(self.config['ORACLE_VA_SQL_V2'].format(fromdate, todate, fromdate, todate))
+        rows = self.curRPT.fetchall()
+        print("Get Oracle VA data successfully with len={0}".format(len(rows)))
+        return rows
+    
+    # V1 Added fromdate and todate   
+    def getOracleMerchantData(self, fromdate, todate):
+        print("Begin get Oracle MGB Merchant data from {0} to {1}".format(fromdate, todate))
+        self.curRPT.execute(self.config['ORACLE_MGBMERCHANTS_SQL'].format(fromdate, todate))
+        rows = self.curRPT.fetchall()
+        print("Get Oracle MGB Merchant data successfully with len={0}".format(len(rows)))
         return rows
 
     def __del__(self):
