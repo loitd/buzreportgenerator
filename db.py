@@ -56,6 +56,7 @@ class DB:
         print("Connected to Oracle SAT successfully!")
 
     # After connecting to databases, now get data for each service
+    # -------------------------------------------------------------------------------------------
     def getPostgresMegabankData(self):
         print("Begin get Megabank's data")
         try:
@@ -71,6 +72,7 @@ class DB:
         print("Begin get Oracle Megabank data")
         self.curCRM.execute(self.config['ORACLE_MEGABANK_SQL'])
         rows = self.curCRM.fetchall()
+        # need to manipulate data before returned
         print("Get Oracle Megabank data successfully!")
         return rows
     

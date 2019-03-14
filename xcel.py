@@ -1,7 +1,8 @@
 from openpyxl import Workbook, load_workbook
 from halo import Halo
 import time
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime
+from copy import copy
 class XCel:
     def __init__(self, config):
         p1 = time.time()
@@ -45,66 +46,81 @@ class XCel:
 
     # Begin appending datas into first blank cell of the col
     # By default, append to ws1 = Data raw
-    def appendNext(self, datas, col, ws=1):
+    def appendNext(self, datas, col, ws=1, firstColDatetime=True):
         p1 = time.time()
         print("Begin appendNext with firstCol={0}".format(col))
         # First, detect for first bank row
         row = self.detectBlank(ws=ws, col=col)
+        oriRow = row
         oriCol = col
         # check ws
         if ws == 1:
             wsx = self.ws
         elif ws == 2:
             wsx = self.ws2
-        # Now writting 
+        # get one sample format of 1st col
+        cellx = wsx.cell(column=col, row=row-1)
+        # Now writting, datas is a list, data is tuple
         for data in datas:
             print("Writing: {0} at row/col: {1}/{2}".format(data, row, col))
+            # data is a tuple, dat is an element
             for dat in data:
-                wsx.cell(column=col, row=row, value=dat)
+                if firstColDatetime == True and col == oriCol:
+                    datx = datetime.strptime(dat,"%m/%d/%Y")
+                else:
+                    datx = dat
+                wsx.cell(column=col, row=row, value=datx)
                 col = col + 1
             row = row + 1
             col = oriCol
+        # Now copy format for first col
+        print("Begin formatting rows ...")
+        for rows in wsx.iter_rows(min_row=oriRow, max_row=row, min_col=oriCol, max_col=oriCol):
+            for cell in rows:
+                if cellx.has_style:
+                    cell.number_format = copy(cellx.number_format)
+                    cell.alignment = copy(cellx.alignment)
         p2 = time.time()
         print("[{0}] appendNext complete successfully".format(p2-p1))
         return True
     
-    def appendMegabank(self, datas):
+    def appendMegabank(self, datas, firstColDatetime=True):
         print("Begin append data for Megabank")
         return self.appendNext(datas, col=1)
     
-    def appendTopup(self, datas):
+    def appendTopup(self, datas, firstColDatetime=True):
         print("Begin append data for Topup")
         return self.appendNext(datas, col=16)
     
-    def appendSQLTopup(self, datas):
+    def appendSQLTopup(self, datas, firstColDatetime=True):
         print("Begin append data for SQL Topup")
         return self.appendNext(datas, col=16)
     
-    def appendSAT(self, datas):
+    def appendSAT(self, datas, firstColDatetime=True):
         print("Begin append data for SAT")
         return self.appendNext(datas, col=24)
     
-    def appendMC(self, datas):
+    def appendMC(self, datas, firstColDatetime=True):
         print("Begin append data for MC")
         return self.appendNext(datas, col=51)
     
-    def appendVA(self, datas):
+    def appendVA(self, datas, firstColDatetime=True):
         print("Begin append data for VA")
         return self.appendNext(datas, col=59)
     
-    def appendMD(self, datas):
+    def appendMD(self, datas, firstColDatetime=True):
         print("Begin append data for MD")
         return self.appendNext(datas, col=67)
     
-    def appendFD(self, datas):
+    def appendFD(self, datas, firstColDatetime=True):
         print("Begin append data for FD")
         return self.appendNext(datas, col=75)
     
-    def appendVERIFY(self, datas):
+    def appendVERIFY(self, datas, firstColDatetime=True):
         print("Begin append data for VERIFY")
         return self.appendNext(datas, col=82)
     
-    def appendTHS(self, datas):
+    def appendTHS(self, datas, firstColDatetime=True):
         print("Begin append data for THS")
         return self.appendNext(datas, col=88)
     
